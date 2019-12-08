@@ -12,27 +12,21 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        boolean isIntercepted = true;    // 是否拦截
+        boolean isIntercepted = true;    // 是否放行
         HttpSession session = request.getSession();
-        Object adminInfo = session.getAttribute("adminInfo");
+        Object adminInfo = session.getAttribute("username");
         if ("/login.html".equals(request.getRequestURI()) || "/session".equals(request.getRequestURI())) {
-            System.out.println("正常页面");
-            return true;
+            if (adminInfo != null)     // 用户已经登录
+                response.sendRedirect("/index.html");
         }
         else {
-
-            System.out.println(session.getId());
-
             if (adminInfo == null) {
-                System.out.println("用户未登陆！！！");
+                System.out.println("LoginInterceptor: 用户未登陆！！！");
                 response.sendRedirect("/login.html");
-                return false;
-            }
-            else {
-                System.out.println("用户已经登陆。。。");
-                return true;
+                isIntercepted = false;
             }
         }
+        return isIntercepted;
     }
 
     @Override
