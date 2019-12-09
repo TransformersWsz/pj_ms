@@ -5,8 +5,30 @@
     <title>index</title>
     <link rel="icon" href="/img/bosch.png" type="image/x-icon">
     <script src="/js/jquery.min.js"></script>
+    <style>
+        button {
+            background-color: blue;
+            height: 100px;
+            width: 100px;
+        }
+    </style>
 </head>
 <body>
 This is index.html
+<button id="logout_submit">logout</button>
 </body>
+<script>
+    $("#logout_submit").click(function () {
+        $.ajax({
+            type : "DELETE",
+            url : "/session",
+            data: {
+                "username": "null"
+            },
+            complete: function (xhr, status) {
+                window.location.href = "/login.html";
+            }
+        });
+    });
+</script>
 </html>

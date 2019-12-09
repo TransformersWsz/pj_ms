@@ -1,6 +1,7 @@
 package com.bosch.pj_ms.controller;
 
 import com.bosch.pj_ms.pojo.User;
+import com.bosch.pj_ms.service.LogService;
 import com.bosch.pj_ms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LogService logService;
 
     @PostMapping("/session")
     @ResponseBody
@@ -30,6 +36,10 @@ public class UserController {
         if (list.size() == 1) {
             hashMap.put("result", 1);
             request.getSession().setAttribute("username", username);
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String operation = username + " login successfully at " + df.format(new Date());
+            logService.addLogService(operation);
         }
         else {
             hashMap.put("result", 0);
@@ -38,6 +48,9 @@ public class UserController {
     }
 
     @DeleteMapping("/session")
+    public void logout(HttpServletRequest request) {
+        request.getSession().setAttribute("username", null);
+    }
 
 
     @GetMapping("/index.html")
