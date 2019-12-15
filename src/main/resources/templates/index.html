@@ -2,33 +2,329 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>index</title>
+    <title>Home</title>
     <link rel="icon" href="/img/bosch.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/ionicons.min.css">
+    <link rel="stylesheet" href="/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/css/_all-skins.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <script src="/js/jquery.min.js"></script>
-    <style>
-        button {
-            background-color: blue;
-            height: 100px;
-            width: 100px;
-        }
-    </style>
 </head>
-<body>
-This is index.html
-<button id="logout_submit">logout</button>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="/index.html" class="logo">
+                <span class="logo-mini"><b>A</b>E</span>
+                <span class="logo-lg"><b>BOSCH</b></span>
+            </a>
+
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user user-menu">
+                            <a href="/login.html" class="dropdown-toggle">
+                                <span class="hidden-xs" id="logout_submit"><b>Logout</b></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="/img/user.jpg" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p>Admin</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    </div>
+                </div>
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="active treeview">
+                        <a href="/index.html">
+                            <i class="fa fa-dashboard"></i> <span>Project Management</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    Project Management
+                </h1>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <div id="toolbar" class="btn-group">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#pjwindow">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>New Project
+                    </button>
+
+                    <!--新项目窗口-->
+                    <div class="modal fade" id="pjwindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">New Project</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>PRJ MCR-ID</label>
+                                        <input type="text" class="form-control" id="mcr_id">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>PRJ NAME</label>
+                                        <input type="text" class="form-control" id="pj_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CREATE DATE</label>
+                                        <div class="input-group date form_date col-md-5" data-date=""
+                                             data-date-format="dd MM yyyy" data-link-field="pj_date"
+                                             data-link-format="yyyy-mm-dd">
+                                            <input class="form-control" size="16" type="text" value="" readonly>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                        </div>
+                                        <input type="hidden" id="pj_date" value=""/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>PRJ DESCRIPTION</label>
+                                        <input id="pj_des" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="new_pj">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="table"></table>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+            reserved.
+        </footer>
+
+        <!--编辑窗口-->
+        <div class="modal fade" id="editwindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">New Project</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>PRJ MCR-ID</label>
+                            <input type="text" class="form-control" id="e_mcr_id">
+                        </div>
+                        <div class="form-group">
+                            <label>PRJ NAME</label>
+                            <input type="text" class="form-control" id="e_pj_name">
+                        </div>
+                        <div class="form-group">
+                            <label>CREATE DATE</label>
+                            <div class="input-group date form_date col-md-5" data-date=""
+                                 data-date-format="dd MM yyyy" data-link-field="e_pj_date"
+                                 data-link-format="yyyy-mm-dd">
+                                <input class="form-control" size="16" type="text" value="" >
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <input type="hidden" id="e_pj_date" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label>PRJ DESCRIPTION</label>
+                            <input id="e_pj_des" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="edit_pj">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </body>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-table.min.js"></script>
+<script src="/js/bootstrap-table-toolbar.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/js/adminlte.min.js"></script>
 <script>
-    $("#logout_submit").click(function () {
+
+    function warn(value) {
+        window.alert(value + "cannot be empty!")
+    }
+
+    $('.form_date').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        minView: 2,
+        format: 'yyyy-mm-dd',
+        forceParse: 0
+    });
+
+    $("#logout_submit").click(() => {
         $.ajax({
-            type : "DELETE",
-            url : "/session",
-            data: {
-                "username": "null"
+            type: "DELETE",
+            url: "/session/" + localStorage.getItem("userId"),
+            success: function (response) {
+                window.alert(JSON.stringify(response));
+                window.location.href = "/login.html";
             },
             complete: function (xhr, status) {
-                window.location.href = "/login.html";
+                console.log("complete")
             }
         });
     });
+
+    $("#new_pj").click(function () {
+        const mcr_id = $("#mcr_id").val();
+        const pj_name = $("#pj_name").val();
+        const pj_date = $("#pj_date").val();
+        const pj_des = $("#pj_des").val();
+        if (mcr_id == "") {
+            warn("PRJ MCR-ID");
+            return false;
+        }
+        if (pj_name == "") {
+            warn("PRJ NAME");
+            return false;
+        }
+        if (pj_date == "") {
+            warn("CREATE DATE");
+            return false;
+        }
+        if (pj_des == "") {
+            warn("PRJ DESCRIPTION");
+            return false;
+        }
+        $("#new_pj").attr("disabled", true);
+
+        $.ajax({
+            type : "POST",
+            url : "/pj",
+            data : {
+                "mcr_id": mcr_id,
+                "pj_name": pj_name,
+                "pj_date": pj_date,
+                "pj_des": pj_des
+            },
+            timeout: 10000,
+            error: function(xhr, status) {
+                window.alert("Network request timeout! Please check your network.");
+            },
+            success : function(response) {
+                if (response.pj_id != -1) {
+                    $("#table").bootstrapTable("refresh");
+                    $("#pjwindow").modal("hide");
+                }
+                else
+                    window.alert("Duplicate PRJ MCR-ID! ");
+            },
+            complete: function (xhr, status) {
+                $("#new_pj").attr("disabled", false);
+            }
+        });
+
+    });
+
+    const $table = $("#table");
+    $(function () {
+        const otable = new tableinit();
+        otable.init();
+    });
+
+
+    const tableinit = function () {
+        const otableinit = new Object();
+        otableinit.init = function () {
+            $table.bootstrapTable({
+                showColumns: true, //显示隐藏列    
+                showRefresh: true,  //显示刷新按钮
+                toolbar: '#toolbar',
+                url: "/pj",
+                sidePagination: 'server',
+                method: "get",
+                cache: false,
+                pagination: true,
+                pageSize: 10,
+                pageNumber: 1,
+                pageList: "[10, 20, 50]",
+                queryParamsType: "limit", //参数格式,发送标准的RESTFul类型的参数请求
+                striped: true,
+                columns: [
+                    {
+                        field: "mcr_id",
+                        title: "PRJ MCR-ID",
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        field: "pj_name",
+                        title: "PRJ NAME",
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        field: "pj_date",
+                        title: "CREATE DATE",
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        field: "pj_des",
+                        title: "PRJ DESCRIPTION",
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: "PRJ OPERATION",
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: (value, row, index) => {
+                            return [
+                                '<button type="button" class="btn btn-success" style="margin-right:15px;">edit</button>',
+
+                                '<button type="button" class="btn btn-danger">delete</button>'
+                            ].join('');
+                        },
+                        events: {
+                            'click .btn-success': function (e, value, row, index) {
+                                $("#e_mcr_id").val(row.mcr_id);
+                                $("#e_pj_name").val(row.pj_name);
+                                $("#e_pj_des").val(row.pj_des);
+                                $("#e_pj_date").val(row.pj_date);
+                                $("#editwindow").modal("show");
+                            },
+                        }
+                    }]
+            });
+        };
+        return otableinit;
+    };
 </script>
 </html>

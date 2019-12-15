@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>login</title>
+    <title>Welcome</title>
     <link rel="icon" href="/img/bosch.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/signin.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -39,13 +39,14 @@
                 window.alert("Network request timeout! Please check your network.");
             },
             success : function(response) {
-                if (response.result == 1) {
+                if (response.userId != -1) {
                     let stateObject = {"state": "login..."};
+                    localStorage.setItem("userId", response.userId);
                     history.replaceState(stateObject, "index", "/index.html");
                     window.location.href = "/index.html";
                 }
                 else {
-                    window.alert("用户名或密码错误，请重试！");
+                    window.alert("Username or password may be wrong, please try it again.");
                 }
             },
             complete: function (xhr, status) {
