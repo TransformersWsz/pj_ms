@@ -91,50 +91,13 @@
 
                 <div id="toolbar" class="btn-group">
                     <button class="btn btn-default" data-toggle="modal" data-target="#pjwindow">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>New Project
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Project
                     </button>
 
-                    <!--新建项目窗口-->
-                    <div class="modal fade" id="pjwindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title">New Project</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>PRJ MCR-ID</label>
-                                        <input type="text" class="form-control" id="mcr_id">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>PRJ NAME</label>
-                                        <input type="text" class="form-control" id="pj_name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>CREATE DATE</label>
-                                        <div class="input-group date form_date col-md-5" data-date=""
-                                             data-date-format="dd MM yyyy" data-link-field="pj_date"
-                                             data-link-format="yyyy-mm-dd">
-                                            <input class="form-control" size="16" type="text" value="" readonly>
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                        </div>
-                                        <input type="hidden" id="pj_date" value=""/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>PRJ DESCRIPTION</label>
-                                        <input id="pj_des" type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" id="new_pj">Submit</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn btn-default" id="export_pj">
+                        <span class="glyphicon glyphicon-export" aria-hidden="true"></span> Export
+                    </button>
+
                 </div>
                 <table id="table"></table>
             </section>
@@ -145,6 +108,48 @@
             <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
             reserved.
         </footer>
+
+        <!--新建项目窗口-->
+        <div class="modal fade" id="pjwindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">New Project</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>PRJ MCR-ID</label>
+                            <input type="text" class="form-control" id="mcr_id">
+                        </div>
+                        <div class="form-group">
+                            <label>PRJ NAME</label>
+                            <input type="text" class="form-control" id="pj_name">
+                        </div>
+                        <div class="form-group">
+                            <label>CREATE DATE</label>
+                            <div class="input-group date form_date col-md-5" data-date=""
+                                 data-date-format="dd MM yyyy" data-link-field="pj_date"
+                                 data-link-format="yyyy-mm-dd">
+                                <input class="form-control" size="16" type="text" value="" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <input type="hidden" id="pj_date" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label>PRJ DESCRIPTION</label>
+                            <input id="pj_des" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="new_pj">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!--编辑窗口-->
         <div class="modal fade" id="editwindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -236,13 +241,16 @@
         forceParse: 0
     });
 
+    $("#export_pj").click(() => {
+        window.location.href = "/excel/" + $("#year_name").val();
+    });
+
     // 退出登录
     $("#logout_submit").click(() => {
         $.ajax({
             type: "DELETE",
             url: "/session/" + localStorage.getItem("userId"),
             success: function (response) {
-                window.alert(JSON.stringify(response));
                 window.location.href = "/login.html";
             },
             complete: function (xhr, status) {
@@ -415,7 +423,6 @@
                 queryParamsType: "limit", //参数格式,发送标准的RESTFul类型的参数请求
                 queryParams: (params) => {
                     let year_name = $("#year_name").val();
-                    year_name = parseInt(year_name);
                     params.year_name = year_name;
                     return params;
                 },
