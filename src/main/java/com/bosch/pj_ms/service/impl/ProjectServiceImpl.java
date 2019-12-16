@@ -16,13 +16,18 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectMapper projectMapper;
 
     @Override
-    public List<Project> findPartProjects(Integer limit, Integer offset) {
-        return projectMapper.selectPartProjects(limit, offset);
+    public List<Project> findSpecialProject(Integer pj_id) {
+        return projectMapper.selectSpecialProject(pj_id);
     }
 
     @Override
-    public List<Project> findAllProjects() {
-        return projectMapper.selectAllProjects();
+    public List<Project> findPartProjects(Integer limit, Integer offset, String year_name) {
+        return projectMapper.selectPartProjects(limit, offset, year_name);
+    }
+
+    @Override
+    public List<Project> findAllProjects(String year_name) {
+        return projectMapper.selectAllProjects(year_name);
     }
 
     @Override
@@ -39,5 +44,36 @@ public class ProjectServiceImpl implements ProjectService {
             return pj_id;
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = {IOException.class})
+    public Integer modifyProject(Integer pj_id, String mcr_id, String pj_name, String pj_des, String pj_date) throws IOException {
+        Integer rows = -1;
+        try {
+            rows = projectMapper.updateProject(pj_id, mcr_id, pj_name, pj_des, pj_date);
+        }
+        catch (Exception e) {
+            throw new IOException();
+        }
+        finally {
+            return rows;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = {IOException.class})
+    public Integer removeProject(Integer pj_id) throws IOException {
+        Integer rows = -1;
+        try {
+            rows = projectMapper.deleteProject(pj_id);
+        }
+        catch (Exception e) {
+            throw new IOException();
+        }
+        finally {
+            return rows;
+        }
+    }
+
 
 }

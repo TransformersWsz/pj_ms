@@ -48,4 +48,8 @@ public class Project {
     public void setPj_date(Date pj_date) {
         this.pj_date = pj_date;
     }
+
+    public String toString() {
+        return "{" + this.pj_id + " , " + this.mcr_id + " , " + this.pj_name + " , " + this.pj_des + " , " + this.pj_date + "}";
+    }
 }

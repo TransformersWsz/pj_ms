@@ -11,9 +11,16 @@
     <link rel="stylesheet" href="/css/_all-skins.min.css">
     <link rel="stylesheet" href="/css/bootstrap-table.min.css">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <script src="/js/jquery.min.js"></script>
+    <style>
+        .test {
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 20%;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -62,18 +69,32 @@
 
         <div class="content-wrapper">
             <section class="content-header">
-                <h1>
-                    Project Management
-                </h1>
+                <h1>Project Management</h1>
             </section>
             <!-- Main content -->
             <section class="content">
+
+                <div class="form-group test">
+                    <select class="form-control" id="year_name">
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                    </select>
+                </div>
+
                 <div id="toolbar" class="btn-group">
                     <button class="btn btn-default" data-toggle="modal" data-target="#pjwindow">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>New Project
                     </button>
 
-                    <!--新项目窗口-->
+                    <!--新建项目窗口-->
                     <div class="modal fade" id="pjwindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -136,6 +157,7 @@
                         <h4 class="modal-title">New Project</h4>
                     </div>
                     <div class="modal-body">
+                        <input type="hidden" id="e_pj_id" value="" readonly />
                         <div class="form-group">
                             <label>PRJ MCR-ID</label>
                             <input type="text" class="form-control" id="e_mcr_id">
@@ -149,7 +171,7 @@
                             <div class="input-group date form_date col-md-5" data-date=""
                                  data-date-format="dd MM yyyy" data-link-field="e_pj_date"
                                  data-link-format="yyyy-mm-dd">
-                                <input class="form-control" size="16" type="text" value="" >
+                                <input class="form-control" size="16" type="text" id="hidden_date" value="" readonly>
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                             <input type="hidden" id="e_pj_date" value="" />
@@ -158,6 +180,7 @@
                             <label>PRJ DESCRIPTION</label>
                             <input id="e_pj_des" type="text" class="form-control">
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -167,6 +190,27 @@
             </div>
         </div>
 
+        <!--删除窗口-->
+        <div class="modal fade" id="deletewindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Delete Project</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="d_pj_id" value="" readonly />
+                        <h4>Are you sure to delete project <span id="del_mcr_id" style="font-size: 30px; font-weight: bold; color: red"></span> ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="delete_pj">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="/js/jquery.min.js"></script>
@@ -177,8 +221,9 @@
 <script src="/js/adminlte.min.js"></script>
 <script>
 
+
     function warn(value) {
-        window.alert(value + "cannot be empty!")
+        window.alert(value + " cannot be empty!")
     }
 
     $('.form_date').datetimepicker({
@@ -191,6 +236,7 @@
         forceParse: 0
     });
 
+    // 退出登录
     $("#logout_submit").click(() => {
         $.ajax({
             type: "DELETE",
@@ -205,6 +251,60 @@
         });
     });
 
+    // 编辑项目
+    $("#edit_pj").click(() => {
+        const e_pj_id = $("#e_pj_id").val();
+        const e_mcr_id = $("#e_mcr_id").val();
+        const e_pj_name = $("#e_pj_name").val();
+        const e_pj_des = $("#e_pj_des").val();
+        const e_pj_date = $("#hidden_date").val();
+
+        if (e_mcr_id == "") {
+            warn("PRJ MCR-ID");
+            return false;
+        }
+        if (e_pj_name == "") {
+            warn("PRJ NAME");
+            return false;
+        }
+        if (e_pj_date == "") {
+            warn("CREATE DATE");
+            return false;
+        }
+        if (e_pj_des == "") {
+            warn("PRJ DESCRIPTION");
+            return false;
+        }
+
+        $("#edit_pj").attr("disabled", true);
+        $.ajax({
+            type : "PUT",
+            url : "/pj/" + e_pj_id,
+            data : {
+                "mcr_id": e_mcr_id,
+                "pj_name": e_pj_name,
+                "pj_date": e_pj_date,
+                "pj_des": e_pj_des
+            },
+            timeout: 10000,
+            error: function(xhr, status) {
+                window.alert("Network request timeout ! Please check your network.");
+            },
+            success : function(response) {
+                if (response.rows == 1) {
+                    $("#table").bootstrapTable("refresh");
+                    $("#editwindow").modal("hide");
+                }
+                else
+                    window.alert("Update failure, duplicate PRJ MCR-ID ! ");
+            },
+            complete: function (xhr, status) {
+                $("#edit_pj").attr("disabled", false);
+            }
+        });
+    });
+
+    // 新建项目
     $("#new_pj").click(function () {
         const mcr_id = $("#mcr_id").val();
         const pj_name = $("#pj_name").val();
@@ -256,8 +356,42 @@
 
     });
 
+    // 删除项目
+    $("#delete_pj").click(function () {
+        const pj_id = $("#d_pj_id").val();
+
+        $("#delete_pj").attr("disabled", true);
+        $.ajax({
+            type : "DELETE",
+            url : "/pj/" + pj_id,
+            timeout: 10000,
+            error: function(xhr, status) {
+                window.alert("Network request timeout! Please check your network.");
+            },
+            success : function(response) {
+                if (response.rows != -1) {
+                    $("#table").bootstrapTable("refresh");
+                    $("#deletewindow").modal("hide");
+                }
+                else
+                    window.alert("Delete failure, please try it later.");
+            },
+            complete: function (xhr, status) {
+                $("#delete_pj").attr("disabled", false);
+            }
+        });
+    });
+
+    // 检测年份变化
+    $("#year_name").change(() => {
+        $("#table").bootstrapTable("refresh");
+    });
+
     const $table = $("#table");
     $(function () {
+        const now_year = new Date().getFullYear();
+        $("#year_name").val(now_year);
+
         const otable = new tableinit();
         otable.init();
     });
@@ -279,6 +413,12 @@
                 pageNumber: 1,
                 pageList: "[10, 20, 50]",
                 queryParamsType: "limit", //参数格式,发送标准的RESTFul类型的参数请求
+                queryParams: (params) => {
+                    let year_name = $("#year_name").val();
+                    year_name = parseInt(year_name);
+                    params.year_name = year_name;
+                    return params;
+                },
                 striped: true,
                 columns: [
                     {
@@ -308,17 +448,22 @@
                         formatter: (value, row, index) => {
                             return [
                                 '<button type="button" class="btn btn-success" style="margin-right:15px;">edit</button>',
-
                                 '<button type="button" class="btn btn-danger">delete</button>'
                             ].join('');
                         },
                         events: {
                             'click .btn-success': function (e, value, row, index) {
+                                $("#e_pj_id").val(row.pj_id);
                                 $("#e_mcr_id").val(row.mcr_id);
                                 $("#e_pj_name").val(row.pj_name);
                                 $("#e_pj_des").val(row.pj_des);
-                                $("#e_pj_date").val(row.pj_date);
+                                $("#hidden_date").val(row.pj_date);
                                 $("#editwindow").modal("show");
+                            },
+                            'click .btn-danger': function (e, value, row, index) {
+                                $("#d_pj_id").val(row.pj_id);
+                                $("#del_mcr_id").text(row.mcr_id + " (MCR-ID) —— " + row.pj_name + " (NAME) ");
+                                $("#deletewindow").modal("show");
                             },
                         }
                     }]

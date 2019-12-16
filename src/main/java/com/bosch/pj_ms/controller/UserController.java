@@ -58,11 +58,6 @@ public class UserController {
         return hashMap;
     }
 
-    @GetMapping("/test")
-    public void test(HttpServletRequest request) {
-        System.out.println("test....");
-    }
-
 
     @GetMapping("/index.html")
     public String index(HttpServletRequest request) {
