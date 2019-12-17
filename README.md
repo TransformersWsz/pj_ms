@@ -26,7 +26,7 @@ nohup java -jar pj_ms-xxx.jar &
 
 ## How to open a port for my zones in CentOS7 ?
 
-![open port](./open port.png)
+![open port](./open_port.png)
 
 ## Scheduled backup for MySQL Database
 
