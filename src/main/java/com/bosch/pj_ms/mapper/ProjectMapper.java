@@ -8,13 +8,13 @@ import java.util.List;
 @Mapper
 public interface ProjectMapper {
 
-    @Select("select * from project where pj_id=#{pj_id}")
+    @Select("select * from project where pj_id=#{pj_id} order by pj_date desc")
     List<Project> selectSpecialProject(@Param("pj_id") Integer pj_id);
 
-    @Select("select * from project where pj_date like concat(#{year_name}, '%') limit #{offset}, #{limit}")
+    @Select("select * from project where pj_date like concat(#{year_name}, '%') order by pj_date desc limit #{offset}, #{limit}")
     List<Project> selectPartProjects(@Param("limit") Integer limit, @Param("offset") Integer offset, @Param("year_name") String year_name);
 
-    @Select("select * from project where pj_date like concat(#{year_name}, '%')")
+    @Select("select * from project where pj_date like concat(#{year_name}, '%') order by pj_date desc")
     List<Project> selectAllProjects(@Param("year_name") String year_name);
 
     @Insert("insert into project(mcr_id, pj_name, pj_des, pj_date) values(#{mcr_id}, #{pj_name}, #{pj_des}, #{pj_date})")
